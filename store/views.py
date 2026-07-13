@@ -29,10 +29,14 @@ def reviews(request):
 
 
 def product(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'store/product.html', {
+         'product': 'product'
+    })
+   
 
-    context = {
-        'product': product,
-    }
+def productinfo(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
 
-    return render(request, 'store/productinfo.html', context)
+    return render(request, 'store/productinfo.html', {
+        'product': product
+    })

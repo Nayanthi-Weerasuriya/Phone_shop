@@ -10,7 +10,8 @@ urlpatterns = [
     path('aboutus', views.aboutus, name='aboutus'),
     path('reviews', views.reviews, name='reviews'),
     path('admin/', admin.site.urls),
-    path('product/<int:product_id>', views.product, name='product')
+    path('product', views.product, name='product'),
+    path('product/<int:product_id>/', views.productinfo, name='productinfo'),
     
 
 
