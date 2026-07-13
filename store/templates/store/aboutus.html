@@ -1,0 +1,27 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+<!-- About Us Page -->
+{% block content %}
+<section class="py-5">
+  <div class="container px-4 px-lg-5">
+    <div class="row text-center">
+      <h1>
+        Your Trusted Source for Latest Mobile Phones!
+      </h1>
+    </div>
+    <div class="row justify-content-center">
+      <img src="{% static 'assets/storehomeimage.png' %}" style="width: 500px;" />
+    </div>
+    <div class="row text-center mt-5">
+      <h5>
+At Phone House, we specialize in offering the latest mobile phones from top brands. Whether you're an Apple enthusiast, a Samsung fan, or prefer other leading brands, we have the perfect smartphone for you.
+      </h5>
+      <div class="center mt-3">
+        <a class="btn btn-lg btn-primary" href="#">Go to Shop</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
