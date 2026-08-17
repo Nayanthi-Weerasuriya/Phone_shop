@@ -52,3 +52,28 @@ class CartItem(models.Model):
         constraints = [
             models.UniqueConstraint(fields=("user", "product"), name="unique_cart_item_per_user_product"),
         ]
+
+
+class Order(models.Model):
+    """Records a completed order triggered by a successful Stripe payment."""
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_session_id = models.CharField(max_length=200, blank=True, null=True, db_index=True)
+    stripe_event_id = models.CharField(max_length=200, blank=True, null=True, unique=True)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    currency = models.CharField(max_length=10, default='usd')
+    paid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    metadata = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return f'Order {self.pk} user={self.user} paid={self.paid} amount={self.total_amount}'
+
+
+class ProcessedStripeEvent(models.Model):
+    """Keep track of processed Stripe event IDs for idempotency."""
+    event_id = models.CharField(max_length=200, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.event_id

@@ -53,7 +53,13 @@
         </tfoot>
       </table>
     </div>
-    <div class="d-flex justify-content-end"><a class="btn btn-outline-secondary" href="{% url 'store' %}">Continue shopping</a></div>
+    <div class="d-flex justify-content-end gap-2">
+      <a class="btn btn-outline-secondary" href="{% url 'store' %}">Continue shopping</a>
+      <form method="post" action="{% url 'create_checkout_session' %}">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Checkout</button>
+      </form>
+    </div>
   {% else %}
     <div class="text-center py-4">
       <p class="lead mb-3">Your cart is empty.</p>
