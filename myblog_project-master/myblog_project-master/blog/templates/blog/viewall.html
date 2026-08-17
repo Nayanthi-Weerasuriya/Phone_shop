@@ -1,0 +1,24 @@
+<!-- show_posts.html -->
+{% extends 'blog/base.html' %}
+
+{% block title %}All Blog Posts{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">All Posts</h1>
+<div class="list-group">
+    {% for post in posts %}
+        <div class="list-group-item">
+            <h2>{{ post.title }}</h2>
+            <h3>{{ post.category  }} </h3>
+            <p>{{ post.content }}</p>
+            <a href="{% url 'edit_post' post.id %}" class="btn btn-warning">Edit</a>
+            <form method="post" action="{% url 'delete_post' post.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    {% empty %}
+        <p class="text-muted">No posts available.</p>
+    {% endfor %}
+</div>
+{% endblock %}

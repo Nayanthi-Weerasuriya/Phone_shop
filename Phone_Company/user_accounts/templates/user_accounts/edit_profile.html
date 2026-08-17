@@ -1,0 +1,64 @@
+{% extends 'store/base.html' %}
+
+{% block page_header %}
+<section class="profile-hero">
+  <div class="container text-center">
+    <h1>Edit User Profile</h1>
+    <p>Buy Future Phone Today</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<main class="container profile-page py-4 py-md-5">
+  <nav class="profile-tabs" aria-label="Profile navigation">
+    <a href="#account-details">Profile</a>
+    <a class="active" href="#account-details" aria-current="page">Edit Profile</a>
+    <a href="{% url 'password_change' %}">Change Password</a>
+  </nav>
+
+  <form method="post" enctype="multipart/form-data" class="row g-4">
+    {% csrf_token %}
+    <aside class="col-lg-4">
+      <section class="card profile-card h-100">
+        <div class="card-header">Profile Picture</div>
+        <div class="card-body text-center">
+          {% if profile.image %}
+            <img class="profile-image" src="{{ profile.image.url }}" alt="{{ user.username }}'s profile picture">
+          {% else %}
+            <div class="profile-placeholder" aria-hidden="true">{{ user.username|first|upper }}</div>
+          {% endif %}
+          <p class="form-text mb-3">JPG, PNG, or GIF; maximum 5 MB.</p>
+          {{ profile_form.image }}
+          {% for error in profile_form.image.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+        </div>
+      </section>
+    </aside>
+
+    <section class="col-lg-8" id="account-details">
+      <div class="card profile-card">
+        <div class="card-header">Account Details</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label" for="username">Username <span class="text-muted">(read only)</span></label>
+            <input id="username" class="form-control" value="{{ user.username }}" readonly>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label" for="{{ user_form.email.id_for_label }}">Email</label>{{ user_form.email }}{{ user_form.email.errors }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.phone.id_for_label }}">Phone</label>{{ profile_form.phone }}{{ profile_form.phone.errors }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ user_form.first_name.id_for_label }}">First name</label>{{ user_form.first_name }}{{ user_form.first_name.errors }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ user_form.last_name.id_for_label }}">Last name</label>{{ user_form.last_name }}{{ user_form.last_name.errors }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.address_line_1.id_for_label }}">Address 1</label>{{ profile_form.address_line_1 }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.address_line_2.id_for_label }}">Address 2</label>{{ profile_form.address_line_2 }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.city.id_for_label }}">City</label>{{ profile_form.city }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.state.id_for_label }}">State</label>{{ profile_form.state }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.country.id_for_label }}">Country</label>{{ profile_form.country }}</div>
+            <div class="col-md-6"><label class="form-label" for="{{ profile_form.zip_code.id_for_label }}">Zip code</label>{{ profile_form.zip_code }}</div>
+          </div>
+          <button class="btn btn-primary mt-4" type="submit">Save changes</button>
+        </div>
+      </div>
+    </section>
+  </form>
+</main>
+{% endblock %}
