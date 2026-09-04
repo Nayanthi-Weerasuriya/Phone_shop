@@ -1,0 +1,9 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<section class="container py-5 text-center">
+  <h1 class="h2 mb-3">Checkout canceled</h1>
+  <p class="lead">Your payment was canceled. You can review your cart and try again.</p>
+  <a class="btn btn-outline-secondary" href="{% url 'view_cart' %}">Back to cart</a>
+</section>
+{% endblock %}

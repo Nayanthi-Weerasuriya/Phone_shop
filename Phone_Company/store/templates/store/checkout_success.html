@@ -1,0 +1,12 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<section class="container py-5 text-center">
+  <h1 class="h2 mb-3">Payment succeeded</h1>
+  <p class="lead">Thank you for your purchase.</p>
+  {% if session_id %}
+    <p>Session ID: <code>{{ session_id }}</code></p>
+  {% endif %}
+  <a class="btn btn-primary" href="{% url 'store' %}">Continue shopping</a>
+</section>
+{% endblock %}
