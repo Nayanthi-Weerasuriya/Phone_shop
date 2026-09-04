@@ -1,0 +1,43 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<main class="container py-5">
+  <h1 class="h2 mb-4">My Orders</h1>
+  {% if orderlist %}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orderlist %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.created_at|date:"M j, Y g:i A" }}</td>
+              <td>{{ order.currency|upper }} {{ order.total_amount|floatformat:2 }}</td>
+              <td>{% if order.paid %}Paid{% else %}Unpaid{% endif %}</td>
+              <td>
+                {% if not order.paid %}
+                  <form method="post" action="{% url 'payment_mgt:create_checkout_session' order.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-success" type="submit">Go to Payment</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="lead">You have no orders yet.</p>
+  {% endif %}
+  <a class="btn btn-primary" href="{% url 'store' %}">Back to Shop</a>
+</main>
+{% endblock %}

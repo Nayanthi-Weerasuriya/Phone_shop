@@ -1,0 +1,19 @@
+{% extends 'store/base.html' %}
+
+{% block page_header %}{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="card shadow-sm mx-auto text-center" style="max-width: 680px;">
+    <div class="card-body p-5">
+      <div class="display-5 text-success mb-3" aria-hidden="true">&#10003;</div>
+      <h1 class="h2 mb-3">Payment successful</h1>
+      <p class="lead">Thank you for shopping with Future Phone. Your order will be delivered soon.</p>
+      {% if session_id %}
+        <p class="text-muted small">Payment reference: <code>{{ session_id }}</code></p>
+      {% endif %}
+      <a class="btn btn-primary mt-2" href="{% url 'store' %}">Shop Again</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

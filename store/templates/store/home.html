@@ -2,37 +2,23 @@
 {% extends 'store/base.html' %}
 {% load static %}
 
+{% block page_header %}{% endblock %}
+
 {% block content %}
 
-<section class="py-5">
+<section class="shop-home py-5">
     <div class="container px-4 px-lg-5">
 
-        <div class="row text-center">
-            <h1>
-                Your Trusted Source for Latest Mobile Phones!
-            </h1>
-        </div>
-
-        <div class="row justify-content-center">
-            <img
-                src="{% static 'store/image.png' %}"
-                style="width: 500px;"
-                alt="Latest Mobile Phones"
-            >
-        </div>
-
-        <div class="row text-center mt-5">
-            <h5>
-                At Phone House, we specialize in offering the latest mobile phones
-                from top brands. Whether you're an Apple enthusiast, a Samsung fan,
-                or prefer other leading brands, we have the perfect smartphone for you.
-            </h5>
-
-            <div class="center mt-3">
-                <a class="btn btn-lg btn-primary" href="{% url 'store' %}">
-                    Go to Shop
-                </a>
-            </div>
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <span class="badge rounded-pill text-bg-light border mb-3 px-3 py-2">Next-generation tech</span>
+            <h1>Your trusted source for the latest mobile phones.</h1>
+            <p class="mt-4">Discover standout devices from the brands you love, with a simple shopping experience and support you can count on.</p>
+            <a class="btn btn-primary btn-lg px-4 mt-2" href="{% url 'store' %}">Explore the collection <i class="bi-arrow-right ms-2"></i></a>
+          </div>
+          <div class="col-lg-6 text-center">
+            <img class="shop-home-image img-fluid" src="{% static 'store/image.png' %}" alt="Latest mobile phones">
+          </div>
         </div>
 
     </div>

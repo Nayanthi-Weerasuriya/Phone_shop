@@ -1,15 +1,17 @@
 {% extends 'store/base.html' %}
 
+{% block page_header %}{% endblock %}
+
 {% block content %}
 
 <!-- Product section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 my-5">
-        <div class="row gx-4 gx-lg-5 align-items-center">
+        <div class="product-detail row gx-0 align-items-center">
 
             <!-- Product Image -->
             <div class="col-md-6">
-                <img class="card-img-top mb-5 mb-md-0"
+                <img class="product-detail-image w-100 mb-5 mb-md-0"
                      src="{{ product.image.url }}"
                      alt="{{ product.name }}" />
             </div>
@@ -17,7 +19,7 @@
             <!-- Product Details -->
             <div class="col-md-6">
 
-                <div class="small mb-1">
+                <div class="category-label mb-2">
                     Category: {{ product.category }}
                 </div>
 
@@ -25,19 +27,19 @@
                     {{ product.name }}
                 </h1>
 
-                <div class="fs-5 mb-5">
+                <div class="price mb-4">
 
                     {% if product.is_sale %}
                         <span class="text-decoration-line-through">
                             ${{ product.price }}
                         </span>
 
-                        <span>
+                        <span class="text-primary">
                             ${{ product.sale_price }}
                         </span>
 
                     {% else %}
-                        <span>
+                        <span class="text-primary">
                             ${{ product.price }}
                         </span>
                     {% endif %}
@@ -55,11 +57,11 @@
                 </p>
 
 
-                <form class="d-flex" method="post" action="{% url 'add_to_cart' product.id %}">
+                <form class="d-flex gap-2" method="post" action="{% url 'add_to_cart' product.id %}">
                     {% csrf_token %}
                     <label class="visually-hidden" for="inputQuantity">Quantity</label>
-                    <input class="form-control text-center me-3" id="inputQuantity" name="quantity" type="number" value="1" min="1" style="max-width: 5rem" />
-                    <button class="btn btn-outline-dark flex-shrink-0" type="submit"><i class="bi-cart-fill me-1"></i>Add to cart</button>
+                    <input class="form-control text-center" id="inputQuantity" name="quantity" type="number" value="1" min="1" style="max-width: 5rem" />
+                    <button class="btn btn-primary flex-shrink-0 px-4" type="submit"><i class="bi-cart-fill me-1"></i>Add to cart</button>
                 </form>
 
             </div>

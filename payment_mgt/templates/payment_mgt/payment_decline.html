@@ -1,0 +1,17 @@
+{% extends 'store/base.html' %}
+
+{% block page_header %}{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="card shadow-sm mx-auto text-center" style="max-width: 680px;">
+    <div class="card-body p-5">
+      <div class="display-5 text-warning mb-3" aria-hidden="true">&#9888;</div>
+      <h1 class="h2 mb-3">Payment not completed</h1>
+      <p class="lead">Your payment was canceled or could not be completed. You can review your cart and try again.</p>
+      <a class="btn btn-primary me-2" href="{% url 'view_cart' %}">Return to Cart</a>
+      <a class="btn btn-outline-secondary" href="{% url 'store' %}">Continue Shopping</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

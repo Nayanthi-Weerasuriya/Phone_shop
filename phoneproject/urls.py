@@ -11,6 +11,7 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('accounts/', include('user_accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('payment_mgt/', include(('payment_mgt.urls', 'payment_mgt'), namespace='payment_mgt')),
 ]
 
 if settings.DEBUG:

@@ -1,23 +1,32 @@
 {% extends 'store/base.html' %}
 {% load static %}
 
+{% block page_header %}
+<header class="bg-dark py-5">
+  <div class="container text-center text-white">
+    <h1 class="display-4 fw-bolder">Shop all phones</h1>
+    <p class="lead fw-normal text-white-50 mb-0">Find your next favorite device.</p>
+  </div>
+</header>
+{% endblock %}
+
 <!-- Header-->
 {% block content %}
-<section class="py-5">
+<section class="catalog-section">
 
-  <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+  <div class="product-grid row gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 justify-content-center">
     {% for product in products %}
     <div class="col mb-5">
-        <div class="card h-100">
+        <div class="card product-card h-100">
             <!-- Product image-->
-            <img class="card-img-top" src="{{ product.image.url }}" alt="..." />
+            <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
             <!-- Product details-->
             <div class="card-body p-4">
                 <div class="text-center">
                     <!-- Product name-->
                     <h5 class="fw-bolder">{{ product.name }}</h5>
                     <!-- Product price-->
-                    ${{ product.price }}
+                    {% if product.is_sale %}<span class="text-decoration-line-through text-muted">${{ product.price }}</span> <span class="text-danger fw-bold">${{ product.sale_price }}</span>{% else %}${{ product.price }}{% endif %}
                 </div>
             </div>
             <!-- Product actions-->

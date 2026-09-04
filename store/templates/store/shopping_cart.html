@@ -2,6 +2,7 @@
 
 {% block content %}
 <section class="container py-5">
+  <div class="cart-shell bg-white p-3 p-md-4">
   <h1 class="h2 text-center mb-4">Shopping Cart</h1>
 
   {% if cart_items %}
@@ -53,11 +54,11 @@
         </tfoot>
       </table>
     </div>
-    <div class="d-flex justify-content-end gap-2">
-      <a class="btn btn-outline-secondary" href="{% url 'store' %}">Continue shopping</a>
+    <div class="d-flex justify-content-end gap-2 pt-4">
+      <a class="btn btn-outline-secondary cart-action-button" href="{% url 'store' %}">Continue shopping</a>
       <form method="post" action="{% url 'create_checkout_session' %}">
         {% csrf_token %}
-        <button class="btn btn-primary" type="submit">Checkout</button>
+        <button class="btn btn-primary cart-action-button" type="submit">Checkout</button>
       </form>
     </div>
   {% else %}
@@ -66,5 +67,6 @@
       <a class="btn btn-primary" href="{% url 'store' %}">Go to shop</a>
     </div>
   {% endif %}
+  </div>
 </section>
 {% endblock %}

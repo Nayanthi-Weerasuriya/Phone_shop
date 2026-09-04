@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
     'user_accounts',
+    'payment_mgt',
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Stripe configuration. Keep real keys in the local environment, never in source control.
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '').strip()
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '').strip()

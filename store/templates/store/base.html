@@ -9,7 +9,7 @@
 
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Shop home</title>
+    <title>{% block title %}Phone Shop{% endblock %}</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href={% static 'assets/favicon.ico' %}
     />
@@ -18,8 +18,8 @@
       rel="stylesheet"
     />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href= {% static 'css/styles.css' %} rel="stylesheet"  />
-    <link href="{% static 'css/account.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/styles.css' %}?v=4" rel="stylesheet" />
+    <link href="{% static 'css/account.css' %}?v=4" rel="stylesheet" />
   </head>
 
 

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.db.models import F
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
@@ -109,6 +110,7 @@ def remove_from_cart(request, item_id):
 
 # Stripe Checkout integration
 @login_required(login_url="user_accounts:login_user")
+@require_POST
 def create_checkout_session(request):
     """Create a Stripe Checkout Session for the current user's cart and redirect to it.
 
@@ -126,6 +128,14 @@ def create_checkout_session(request):
         return redirect("view_cart")
 
     line_items = []
+    total_price = sum((item.line_total for item in cart_items), start=Decimal("0.00"))
+    order = Order.objects.create(
+        user=request.user,
+        total_amount=total_price,
+        currency="usd",
+        paid=False,
+        metadata={"user_id": str(request.user.id)},
+    )
     for item in cart_items:
         # Stripe expects integer cents
         unit_amount = int(round(item.product.current_price * 100))
@@ -140,8 +150,10 @@ def create_checkout_session(request):
             "quantity": int(item.quantity),
         })
 
-    success_url = request.build_absolute_uri('/shop/checkout/success/') + "?session_id={CHECKOUT_SESSION_ID}"
-    cancel_url = request.build_absolute_uri('/shop/checkout/cancel/')
+    success_url = request.build_absolute_uri(
+        reverse("payment_mgt:payment_success")
+    ) + "?session_id={CHECKOUT_SESSION_ID}"
+    cancel_url = request.build_absolute_uri(reverse("payment_mgt:payment_decline"))
 
     try:
         session = stripe.checkout.Session.create(
@@ -151,7 +163,7 @@ def create_checkout_session(request):
             success_url=success_url,
             cancel_url=cancel_url,
             client_reference_id=str(request.user.id),
-            metadata={"user_id": str(request.user.id)},
+            metadata={"user_id": str(request.user.id), "order_id": str(order.id)},
         )
     except stripe.error.AuthenticationError:
         messages.error(request, "Stripe rejected the secret key. Check STRIPE_SECRET_KEY in your .env file.")
@@ -164,6 +176,15 @@ def create_checkout_session(request):
     return redirect(session.url)
 
 
+@login_required(login_url="user_accounts:login_user")
+def order_list(request):
+    orders = Order.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "store/order_list.html", {
+        "orderlist": orders,
+        "title": "My Orders",
+    })
+
+
 @csrf_exempt
 def stripe_webhook(request):
     """Handle Stripe webhook events. Clears the cart on successful Checkout completion.
@@ -173,7 +194,7 @@ def stripe_webhook(request):
     """
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
-    webhook_secret = os.environ.get("STRIPE_WEBHOOK_SECRET")
+    webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
     # Try to parse/validate the event
     try:
@@ -300,16 +321,23 @@ def stripe_webhook(request):
                         if event_id:
                             ProcessedStripeEvent.objects.create(event_id=event_id)
 
-                        order = Order.objects.create(
+                        metadata = _get_session_field(session, "metadata")
+                        order_id = metadata.get("order_id") if isinstance(metadata, dict) else None
+                        order = Order.objects.filter(
+                            id=order_id,
                             user=user,
-                            stripe_session_id=(_get_session_field(session, "id") or None),
-                            stripe_event_id=event_id,
-                            total_amount=(Decimal(_get_session_field(session, "amount_total", 0)) / Decimal(100)),
-                            currency=(_get_session_field(session, "currency") or "usd"),
-                            paid=True,
-                            paid_at=timezone.now(),
-                            metadata=(_get_session_field(session, "metadata") if isinstance(_get_session_field(session, "metadata"), dict) else None),
-                        )
+                            paid=False,
+                        ).first() if order_id else None
+                        if order is None:
+                            order = Order.objects.create(user=user)
+                        order.stripe_session_id = _get_session_field(session, "id") or None
+                        order.stripe_event_id = event_id
+                        order.total_amount = Decimal(_get_session_field(session, "amount_total", 0)) / Decimal(100)
+                        order.currency = _get_session_field(session, "currency") or "usd"
+                        order.paid = True
+                        order.paid_at = timezone.now()
+                        order.metadata = metadata if isinstance(metadata, dict) else None
+                        order.save()
 
                         deleted, _ = CartItem.objects.filter(user=user).delete()
                         logger.info(f"Cleared {deleted} cart items for user id={getattr(user, 'id', None)}; created order id={order.id}")
