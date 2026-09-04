@@ -15,12 +15,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env for local development (optional)
+# Load local environment variables before reading application settings.
 try:
     from dotenv import load_dotenv
-    load_dotenv(BASE_DIR / '.env')
-except Exception:
-    # python-dotenv not installed or .env missing - continue without failing
+    load_dotenv(BASE_DIR / '.env', override=True)
+except ModuleNotFoundError:
+    # python-dotenv is optional for deployments that inject environment variables.
     pass
 
 import logging
@@ -154,4 +154,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Media files(user uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
